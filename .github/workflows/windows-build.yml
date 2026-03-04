@@ -14,6 +14,9 @@ jobs:
       - name: Install NSIS (if missing)
         run: choco install nsis -y
 
+      - name: Setup MSBuild
+        uses: microsoft/setup-msbuild@v1
+
       - name: Build x64 (Release)
         run: msbuild OpenVR-SpaceCalibrator.sln /p:Configuration=Release /p:Platform=x64 /m
 
