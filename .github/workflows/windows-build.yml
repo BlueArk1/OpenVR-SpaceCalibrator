@@ -32,6 +32,22 @@ jobs:
             "WINSDK_VER=10.0.18362.0" | Out-File -FilePath $Env:GITHUB_ENV -Encoding utf8 -Append
           }
 
+        - name: Build MinHook from source
+          shell: pwsh
+          run: |
+            git clone --depth 1 https://github.com/TsudaKageyu/minhook.git third_party/minhook
+            $sln = Get-ChildItem -Path third_party/minhook -Recurse -Filter *.sln | Select-Object -First 1
+            if (-not $sln) { Write-Error "MinHook solution not found"; exit 1 }
+            foreach ($plat in @('x64','Win32')) {
+              msbuild $sln.FullName /p:Configuration=Release /p:Platform=$plat /p:PlatformToolset=v143 /p:WindowsTargetPlatformVersion=$env:WINSDK_VER /m
+              $lib = Get-ChildItem -Path third_party/minhook -Recurse -Filter *.lib | Where-Object { $_.DirectoryName -match $plat -and $_.Name -match 'MinHook' } | Select-Object -First 1
+              if (-not $lib) { $lib = Get-ChildItem -Path third_party/minhook -Recurse -Filter *.lib | Where-Object { $_.Name -match 'MinHook' } | Select-Object -First 1 }
+              if (-not $lib) { Write-Error "Built MinHook lib not found for platform $plat"; exit 1 }
+              if ($plat -eq 'x64') { $dest = 'lib\MinHook\lib\libMinHook-x64-v141-md.lib' } else { $dest = 'lib\MinHook\lib\libMinHook-x86-v141-md.lib' }
+              Copy-Item $lib.FullName $dest -Force
+              Write-Host "Copied $($lib.FullName) -> $dest"
+            }
+
       - name: Build x64 (Release)
         shell: pwsh
         run: msbuild OpenVR-SpaceCalibrator.sln /p:Configuration=Release /p:Platform=x64 /p:WindowsTargetPlatformVersion=$env:WINSDK_VER /p:PlatformToolset=v143 /m
