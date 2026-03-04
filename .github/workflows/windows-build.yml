@@ -34,11 +34,11 @@ jobs:
 
       - name: Build x64 (Release)
         shell: pwsh
-        run: msbuild OpenVR-SpaceCalibrator.sln /p:Configuration=Release /p:Platform=x64 /p:WindowsTargetPlatformVersion=$env:WINSDK_VER /m
+        run: msbuild OpenVR-SpaceCalibrator.sln /p:Configuration=Release /p:Platform=x64 /p:WindowsTargetPlatformVersion=$env:WINSDK_VER /p:PlatformToolset=v143 /m
 
       - name: Build x86 (Release)
         shell: pwsh
-        run: msbuild OpenVR-SpaceCalibrator.sln /p:Configuration=Release /p:Platform=Win32 /p:WindowsTargetPlatformVersion=$env:WINSDK_VER /m
+        run: msbuild OpenVR-SpaceCalibrator.sln /p:Configuration=Release /p:Platform=Win32 /p:WindowsTargetPlatformVersion=$env:WINSDK_VER /p:PlatformToolset=v143 /m
 
       - name: Package x64 Release
         run: |
