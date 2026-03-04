@@ -18,10 +18,10 @@ jobs:
         uses: microsoft/setup-msbuild@v1
 
       - name: Build x64 (Release)
-        run: msbuild OpenVR-SpaceCalibrator.sln /p:Configuration=Release /p:Platform=x64 /m
+        run: msbuild OpenVR-SpaceCalibrator.sln /p:Configuration=Release /p:Platform=x64 /p:WindowsTargetPlatformVersion=10.0.22621.0 /m
 
       - name: Build x86 (Release)
-        run: msbuild OpenVR-SpaceCalibrator.sln /p:Configuration=Release /p:Platform=Win32 /m
+        run: msbuild OpenVR-SpaceCalibrator.sln /p:Configuration=Release /p:Platform=Win32 /p:WindowsTargetPlatformVersion=10.0.22621.0 /m
 
       - name: Package x64 Release
         run: |
