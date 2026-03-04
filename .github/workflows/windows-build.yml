@@ -1,0 +1,42 @@
+name: Windows Build
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install NSIS (if missing)
+        run: choco install nsis -y
+
+      - name: Build x64 (Release)
+        run: msbuild OpenVR-SpaceCalibrator.sln /p:Configuration=Release /p:Platform=x64 /m
+
+      - name: Build x86 (Release)
+        run: msbuild OpenVR-SpaceCalibrator.sln /p:Configuration=Release /p:Platform=Win32 /m
+
+      - name: Package x64 Release
+        run: |
+          if (Test-Path x64\Release) { Compress-Archive -Path x64\Release\* -DestinationPath release-x64.zip -Force } else { Write-Error "x64\\Release not found" }
+
+      - name: Package x86 Release
+        run: |
+          if (Test-Path x86\Release) { Compress-Archive -Path x86\Release\* -DestinationPath release-x86.zip -Force } else { Write-Error "x86\\Release not found" }
+
+      - name: Build NSIS installer
+        run: |
+          makensis install\installer.nsi
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: OpenVR-SpaceCalibrator-artifacts
+          path: |
+            release-x64.zip
+            release-x86.zip
+            OpenVR-SpaceCalibrator.exe

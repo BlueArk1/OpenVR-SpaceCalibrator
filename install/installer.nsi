@@ -9,10 +9,10 @@
 	!define OVERLAY_BASEDIR "..\client_overlay\bin\win64"
 	!define DRIVER_RESDIR "..\OpenVR-SpaceCalibratorDriver\01spacecalibrator"
 
-	Name "OpenVR-SpaceCalibrator"
-	OutFile "OpenVR-SpaceCalibrator.exe"
-	InstallDir "$PROGRAMFILES64\OpenVR-SpaceCalibrator"
-	InstallDirRegKey HKLM "Software\OpenVR-SpaceCalibrator\Main" ""
+	Name "OpenVR-SpaceCalibrator (Parallel)"
+	OutFile "OpenVR-SpaceCalibrator-Parallel.exe"
+	InstallDir "$PROGRAMFILES64\OpenVR-SpaceCalibrator-Parallel"
+	InstallDirRegKey HKLM "Software\OpenVR-SpaceCalibrator-Parallel\Main" ""
 	RequestExecutionLevel admin
 	ShowInstDetails show
 	
@@ -133,14 +133,14 @@ Section "Install" SecInstall
 	SetOutPath "$vrRuntimePath\drivers\01spacecalibrator\bin\win64"
 	File "..\x64\Release\driver_01spacecalibrator.dll"
 	
-	WriteRegStr HKLM "Software\OpenVR-SpaceCalibrator\Main" "" $INSTDIR
-	WriteRegStr HKLM "Software\OpenVR-SpaceCalibrator\Driver" "" $vrRuntimePath
+	WriteRegStr HKLM "Software\OpenVR-SpaceCalibrator-Parallel\Main" "" $INSTDIR
+	WriteRegStr HKLM "Software\OpenVR-SpaceCalibrator-Parallel\Driver" "" $vrRuntimePath
   
 	WriteUninstaller "$INSTDIR\Uninstall.exe"
-	WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\OpenVRSpaceCalibrator" "DisplayName" "OpenVR-SpaceCalibrator"
-	WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\OpenVRSpaceCalibrator" "UninstallString" "$\"$INSTDIR\Uninstall.exe$\""
+	WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\OpenVRSpaceCalibrator-Parallel" "DisplayName" "OpenVR-SpaceCalibrator (Parallel)"
+	WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\OpenVRSpaceCalibrator-Parallel" "UninstallString" "$\"$INSTDIR\Uninstall.exe$\""
 
-	CreateShortCut "$SMPROGRAMS\OpenVR-SpaceCalibrator.lnk" "$INSTDIR\OpenVR-SpaceCalibrator.exe"
+	CreateShortCut "$SMPROGRAMS\OpenVR-SpaceCalibrator (Parallel).lnk" "$INSTDIR\OpenVR-SpaceCalibrator.exe"
 	
 	SetOutPath "$INSTDIR"
 	nsExec::ExecToLog '"$INSTDIR\OpenVR-SpaceCalibrator.exe" -installmanifest'
@@ -163,7 +163,7 @@ Section "Uninstall"
 	nsExec::ExecToLog '"$INSTDIR\OpenVR-SpaceCalibrator.exe" -removemanifest'
 
 	Var /GLOBAL vrRuntimePath2
-	ReadRegStr $vrRuntimePath2 HKLM "Software\OpenVR-SpaceCalibrator\Driver" ""
+	ReadRegStr $vrRuntimePath2 HKLM "Software\OpenVR-SpaceCalibrator-Parallel\Driver" ""
 	DetailPrint "VR runtime path: $vrRuntimePath2"
 	Delete "$vrRuntimePath2\drivers\01spacecalibrator\driver.vrdrivermanifest"
 	Delete "$vrRuntimePath2\drivers\01spacecalibrator\resources\driver.vrresources"
@@ -182,11 +182,11 @@ Section "Uninstall"
 	Delete "$INSTDIR\manifest.vrmanifest"
 	Delete "$INSTDIR\icon.png"
 	
-	DeleteRegKey HKLM "Software\OpenVR-SpaceCalibrator\Main"
-	DeleteRegKey HKLM "Software\OpenVR-SpaceCalibrator\Driver"
-	DeleteRegKey HKLM "Software\OpenVR-SpaceCalibrator"
-	DeleteRegKey HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\OpenVRSpaceCalibrator"
+	DeleteRegKey HKLM "Software\OpenVR-SpaceCalibrator-Parallel\Main"
+	DeleteRegKey HKLM "Software\OpenVR-SpaceCalibrator-Parallel\Driver"
+	DeleteRegKey HKLM "Software\OpenVR-SpaceCalibrator-Parallel"
+	DeleteRegKey HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\OpenVRSpaceCalibrator-Parallel"
 
-	Delete "$SMPROGRAMS\OpenVR-SpaceCalibrator.lnk"
+	Delete "$SMPROGRAMS\OpenVR-SpaceCalibrator (Parallel).lnk"
 SectionEnd
 
